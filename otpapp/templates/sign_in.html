@@ -1,0 +1,74 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js" type='text/javascript'></script>
+
+<div id="z_div" style="display: block;" >
+
+    <label for="phone">Phone</label>
+    <input type="text" name="phone" id="phone" required>
+    <button  onclick="ajax_send_otp()">Send OTP</button>
+</div>
+<br><br>
+<div id="verify_text_div"></div>
+<div id="otp_div" style="display: none;" >
+
+    <label for="phone">OTP</label>
+    <input type="text" name="otp" id="otp">
+    <button  onclick="verify_otp()">Verify</button>
+    <input type= "button" value= "clear" onclick= "clearInput()">
+</div>
+<br>
+<br>
+<div id="phone_divi">
+    <a href="user_page">  <button type="submit" > Welcome </button></a>
+
+</div>
+
+
+<script>
+    var otp_from_back="";
+    function ajax_send_otp(){
+       if( document.getElementById('phone').value == '' ){
+           document.getElementById("verify_text_div").style.color="red";
+           document.getElementById("verify_text_div").innerHTML="Cannot Empty";
+     
+   }
+   else{
+       document.getElementById("phone_div");
+       phone = document.getElementById("phone");
+     $.post("/send_otp",
+         {
+             "phone":phone.value,
+             "csrfmiddlewaretoken":"{{csrf_token}}"
+         },
+         function(data, status){
+             if(status=="success"){
+                 otp_from_back = data;
+                 document.getElementById("otp_div").style.display='block';
+                 }
+    }
+    );
+    }
+   }
+   function verify_otp(){
+        var user_otp=document.getElementById("otp").value;
+        if (user_otp=='00000'){
+            document.getElementById("verify_text_div").style.color="green";            
+            document.getElementById("verify_text_div").innerHTML="verified";
+            document.getElementById("form_div").style.display="block";
+           
+        }
+        else{
+            document.getElementById("verify_text_div").style.color="red";
+            document.getElementById("verify_text_div").innerHTML="Try again";
+            
+        }
+    } 
+ </script>
+  <script>
+    function clearInput(){
+      var getValue= document.getElementById("otp");
+        if (getValue.value !="") {
+            getValue.value = "";
+        }
+ }
+ </script>
+
